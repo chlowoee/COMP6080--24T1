@@ -1,0 +1,90 @@
+.display {
+  display: none;
+}
+
+.background {
+  height: 808px;
+  width: 1555px;
+  background-color: #003781;
+  background-position: center;
+}
+
+.image-box-flex {
+  display: flex;
+  justify-content: space-between;
+  width: 1401px;
+  height: 325px;
+  position: absolute;
+  top: 94px;
+  left: 87px;
+}
+
+.image-flex {
+  width: 440px;
+}
+
+.all-text {
+  width: 443px;
+  color: #fffbf4;
+  font-family: Arial, Helvetica;
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  width: 1401px;
+  height: 325px;
+  position: absolute;
+}
+
+.main-text-box {
+  top: 473px;
+  left: 87px;
+}
+
+.main-text-flex {
+  font-size: 2em;
+}
+
+.mid-text-box {
+  top: 602px;
+  left: 87px;
+}
+
+.mid-text-flex {
+  font-size: 1.2em;
+  line-height: 150%;
+}
+
+.mid-high {
+  top: 562px;
+  left: 86px;
+}
+
+.high {
+  position: absolute;
+}
+
+.bot-text-box {
+  top: 729px;
+  left: 90px;
+}
+
+.bot-text-flex {
+  font-size: 1.2em;
+  line-height: 150%;
+  letter-spacing: 1.2px;
+}
+
+.bot-high {
+  top: 660px;
+  left: 90px;
+  letter-spacing: 0.5px;
+}
+
+.create {
+  background-image: url("assets/arrow.png");
+  background-repeat: no-repeat;
+  padding-left: 40px;
+}
