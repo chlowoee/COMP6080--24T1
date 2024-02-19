@@ -2,6 +2,23 @@
   display: none;
 }
 
+html {
+  width: 100%;
+  height: 100%;
+  display: table;
+}
+
+body {
+  width: 100%;
+  display: table-cell;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
 .background {
   height: 808px;
   width: 1555px;
@@ -15,8 +32,8 @@
   width: 1401px;
   height: 325px;
   position: absolute;
-  top: 94px;
-  left: 87px;
+  top: 85px;
+  left: 80px;
 }
 
 .image-flex {
@@ -38,9 +55,13 @@
   position: absolute;
 }
 
+.flex.flex-text {
+  height: 80px;
+}
+
 .main-text-box {
-  top: 473px;
-  left: 87px;
+  top: 465px;
+  left: 79px;
 }
 
 .main-text-flex {
@@ -48,8 +69,8 @@
 }
 
 .mid-text-box {
-  top: 602px;
-  left: 87px;
+  top: 593px;
+  left: 78px;
 }
 
 .mid-text-flex {
@@ -58,8 +79,8 @@
 }
 
 .mid-high {
-  top: 562px;
-  left: 86px;
+  top: 553px;
+  left: 78px;
 }
 
 .high {
@@ -67,8 +88,8 @@
 }
 
 .bot-text-box {
-  top: 729px;
-  left: 90px;
+  top: 720px;
+  left: 82px;
 }
 
 .bot-text-flex {
@@ -78,8 +99,8 @@
 }
 
 .bot-high {
-  top: 660px;
-  left: 90px;
+  top: 650px;
+  left: 78px;
   letter-spacing: 0.5px;
 }
 
