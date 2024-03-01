@@ -1,14 +1,3 @@
-.display {
-  display: none;
-}
-
-.ex {
-  width: 100%;
-  opacity: 0.5;
-  margin: 0 auto;
-  position: absolute;
-}
-
 html {
   width: 100%;
   height: 100%;
@@ -103,7 +92,6 @@ body {
   border-bottom: 1px #DDE2E5 solid;
 }
 
-
 .icon {
   background-repeat: no-repeat;
   padding-left: 8.5%;
@@ -147,7 +135,7 @@ body {
   margin: 10px 0px 20px 0px;
 }
 
-.passenger .middle-rectangle {
+#passenger .middle-rectangle {
   margin: 0px 0px;
   padding: 0px;
 }
@@ -155,7 +143,7 @@ body {
 .middle-bottom {
   display: inline-flex;
   height: auto;
-  margin-right: 2%;
+
 }
 
 .middle-top {
@@ -194,18 +182,6 @@ body {
     justify-content: flex-start;
   }
 
-  .middle-rectangle {
-    width: 101%;
-  }
-
-  .bot-container {
-    height: 30%;
-  }
-
-  .small-button {
-    margin-top: 5%;
-  }
-
   #thin-container {
     height: 30%;
   }
@@ -227,12 +203,12 @@ body {
     margin: 10px 0px 20px 0px;
   }
 
-  .passenger {
+  #passenger {
     margin-top: 10px;
   }
 
-  .passenger .red-arrow {
-    margin-right: 53px;
+  #passenger .red-arrow {
+    margin-right: 35px;
   }
 
   #small-button {
@@ -244,11 +220,7 @@ body {
     width: 94%;
   }
 
-  .passenger-icon {
-    padding-left: 40px;
-  }
-
-  .passenger .icon {
+  #passenger .icon {
     padding-left: 40px;
   }
 
@@ -256,7 +228,7 @@ body {
     margin-top: -485px;
   }
 
-  .passenger .middle-rectangle {
+  #passenger .middle-rectangle {
     padding: 0px 0px 20px 0px;
   }
 
