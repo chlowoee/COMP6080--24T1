@@ -15,19 +15,14 @@ body {
   padding: 0;
 }
 
-.background {
+#background {
   height: 808px;
   width: 1555px;
   background-color: #003781;
   background-position: center;
 }
 
-.image-box-flex {
-  display: flex;
-  justify-content: space-between;
-  width: 1401px;
-  height: 325px;
-  position: absolute;
+#image-box-flex {
   top: 85px;
   left: 80px;
 }
@@ -100,7 +95,7 @@ body {
   letter-spacing: 0.5px;
 }
 
-.create {
+.arrow {
   background-image: url("assets/arrow.png");
   background-repeat: no-repeat;
   padding-left: 40px;
