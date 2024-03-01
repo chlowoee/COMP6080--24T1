@@ -18,9 +18,12 @@ body {
   display: none;
 }
 
-.main-container {
+.flex-col {
   display: flex;
   flex-direction: column;
+}
+
+#main-container {
   justify-content: space-between;
   max-width: 100%;
   height: 3034px;
@@ -69,9 +72,6 @@ body {
 .quarter-box-text {
   margin: 4%;
   width: 92%;
-  color: #333333;
-  display: flex;
-  flex-direction: column;
   padding: 0 2.5%
 }
 
@@ -152,8 +152,6 @@ body {
 }
 
 .money-text-container {
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   margin-left: 20px;
 }
@@ -239,8 +237,6 @@ h3 {
 
 .svg-colour {
   fill: #999999;
-  height: 60px;
-  width: 60px;
 }
 
 .month-bill {
@@ -277,7 +273,7 @@ h3 {
 }
 
 @media only screen and (min-width: 1573px) and (min-height: 895px) {
-  .main-container {
+  #main-container {
     flex-direction: row;
     height: 895px;
     align-items: center;
@@ -310,12 +306,11 @@ h3 {
   }
 
   .large-quarter .large-btn {
-    margin-top: 30px;
+    margin-top: 35px;
   }
 
   .grey-bg .large-btn {
     width: 310px;
-    margin-top: 30px;
   }
 
   .top-margin {
@@ -330,12 +325,8 @@ h3 {
     font-size: 5em;
   }
 
-  .h1-container {
-    padding: 40px 0;
-  }
-
   .large-quarter .h1-container {
-    padding: 40px 0 20px;
+    padding: 40px 0 10px;
   }
 
   .med-quarter .h1-container {
@@ -361,10 +352,6 @@ h3 {
     margin-top: 0;
     padding: 6% 0 15px 0;
 
-  }
-
-  .grey-bg .h2 {
-    padding: 6% 0 15px 0;
   }
 
   h3 {
