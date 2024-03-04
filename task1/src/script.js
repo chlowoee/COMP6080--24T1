@@ -26,14 +26,17 @@ mainForm['select-all-btn'].addEventListener('click', () => {
   if (mainForm['select-all-btn'].value === 'Select All') {
     for (let i = 0; i < checkboxes.length; i++) {
       checkboxes[i].checked = true;
+      checkedCheckboxes.add(checkboxes[i]);
     }
     mainForm['select-all-btn'].value = 'Deselect All';
   } else {
     for (let i = 0; i < checkboxes.length; i++) {
       checkboxes[i].checked = false;
+      checkedCheckboxes.delete(checkboxes[i]);
     }
     mainForm['select-all-btn'].value = 'Select All';
   }
+  writeToOutput();
 });
 
 var completedFields = new Set();
@@ -52,6 +55,7 @@ function getAge(dob) {
   return year;
 }
 
+//check if dis
 function isValidDate(dob) {
   let dateRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
   if (!dateRegex.test(dob)) {
@@ -62,44 +66,71 @@ function isValidDate(dob) {
   let month = parseInt(parts[1], 10) - 1;
   let year = parseInt(parts[2], 10);
   let date = new Date(year, month, day);
-  return (
-    date.getDate() === day &&
-    date.getMonth() === month &&
-    date.getFullYear() === year
-  );
+  if (date.getDate() !== day || date.getMonth() !== month
+    || date.getFullYear() !== year) {
+    return false;
+  }
+  let today = new Date();
+
+  let newYear = today.getFullYear() - date.getFullYear();
+  let newMonth = today.getMonth() - date.getMonth();
+  let newDay = today.getDate() - date.getDate();
+
+  if (newMonth < 0 || (newMonth === 0 && newDay < 0)) {
+    newYear--;
+  }
+  if (newYear < 0) {
+    return false;
+  }
+
+  return newYear;
 }
+const isValidStreetnameSuburb = (field) => (field.value !== '' && field.value.length >= 3 && field.value.length <= 50);
+const isValidPostcode = (field) => (/^\d{4}$/.test(field.value));
+const isValidDob = (field) => isValidDate(field.value);
+
 var editedFields = new Set();
 function fieldHandler(field) {
-  if (((field.id === 'street-name' || field.id === 'suburb') && (!field.value
-    || field.value.length < 3 || field.value.length > 50))
-    || (field.id === 'postcode' && !/^\d{4}$/.test(field.value))
-    || (field.id === 'dob' && !isValidDate(mainForm['dob'].value))) {
-    invalidTextInput(field);
-  } else {
+  let fieldString = field.id;
+  if (fieldString === 'street-name') {
+    fieldString = 'street name';
+  }
+  editedFields.add(mainForm[field.id]);
+
+  // fix this!!! just use the if statements on the page
+  if (((field.id === 'street-name' || field.id === 'suburb') && isValidStreetnameSuburb(field))
+    || (field.id === 'postcode' && isValidPostcode(field))
+    || (field.id === 'dob' && isValidDob(field))) {
     validTextInput(field);
+  } else if (!mainForm['street-name'].value || !isValidStreetnameSuburb(mainForm['street-name'])) {
+    mainForm['form-result'].value = `Please input a valid street name`;
+    completedFields.delete(mainForm['street-name']);
+  } else if (isValidStreetnameSuburb(mainForm['street-name'])
+    && (!mainForm['suburb'].value || !isValidStreetnameSuburb(mainForm['suburb']))) {
+    mainForm['form-result'].value = `Please input a valid suburb`;
+    completedFields.delete(mainForm['suburb']);
+  } else if (isValidStreetnameSuburb(mainForm['street-name'])
+    && isValidStreetnameSuburb(mainForm['suburb'])
+    && (!mainForm['postcode'].value || !isValidPostcode(mainForm['postcode']))) {
+    mainForm['form-result'].value = 'Please input a valid postcode';
+    completedFields.delete(mainForm['postcode']);
+  } else if (isValidStreetnameSuburb(mainForm['street-name'])
+    && isValidStreetnameSuburb(mainForm['suburb'])
+    && isValidPostcode(mainForm['postcode'])
+    && (!mainForm['dob'].value || !isValidDob(mainForm['dob']))) {
+    mainForm['form-result'].value = 'Please input a valid dob';
+    completedFields.delete(mainForm['dob']);
   }
 }
 
-function invalidTextInput(field) {
-  completedFields.delete(mainForm[field.id]);
-  editedFields.add(mainForm[field.id]);
-  editOutput();
-}
+// function invalidTextInput(field) {
+//   completedFields.delete(mainForm[field.id]);
+// }
 
 function validTextInput(field) {
   completedFields.add(mainForm[field.id]);
   editedFields.delete(mainForm[field.id]);
-  editOutput();
-}
-
-function editOutput() {
   if (editedFields.size === 0 && completedFields.size < 4) {
     mainForm['form-result'].value = '';
-  } else if (editedFields.size > 0 && completedFields.size < 4) {
-    let fieldString = editedFields.values().next().value.id;
-    if (fieldString === 'street-name') {
-      fieldString = 'street name';
-    }
-    mainForm['form-result'].value = `Please input a valid ${fieldString}`;
   }
 }
