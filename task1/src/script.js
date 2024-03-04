@@ -19,18 +19,17 @@ function checkboxHandler(event) {
 var checkboxes = document.querySelectorAll('input[type = "checkbox"]');
 checkboxes.forEach(function (checkbox) {
   checkbox.addEventListener('change', checkboxHandler);
-
 });
 
 // select all
 mainForm['select-all-btn'].addEventListener('click', () => {
   if (mainForm['select-all-btn'].value === 'Select All') {
-    for (var i = 0; i < checkboxes.length; i++) {
+    for (let i = 0; i < checkboxes.length; i++) {
       checkboxes[i].checked = true;
     }
     mainForm['select-all-btn'].value = 'Deselect All';
   } else {
-    for (var i = 0; i < checkboxes.length; i++) {
+    for (let i = 0; i < checkboxes.length; i++) {
       checkboxes[i].checked = false;
     }
     mainForm['select-all-btn'].value = 'Select All';
@@ -69,12 +68,38 @@ function isValidDate(dob) {
     date.getFullYear() === year
   );
 }
-// function fieldHandler(field) {
-//   if (!mainForm['street-name'].value || mainForm['street-name'].value.length < 3 || mainForm['street-name'].value.length > 50) {
-//     mainForm['form-result'].value = 'Please input a valid street name';
-//     completedFields.delete(mainForm['street-name']);
-//   } else {
-//     completedFields.add(mainForm['street-name']);
-//     mainForm['form-result'].value = '';
-//   }
-// }
+var editedFields = new Set();
+function fieldHandler(field) {
+  if (((field.id === 'street-name' || field.id === 'suburb') && (!field.value
+    || field.value.length < 3 || field.value.length > 50))
+    || (field.id === 'postcode' && !/^\d{4}$/.test(field.value))
+    || (field.id === 'dob' && !isValidDate(mainForm['dob'].value))) {
+    invalidTextInput(field);
+  } else {
+    validTextInput(field);
+  }
+}
+
+function invalidTextInput(field) {
+  completedFields.delete(mainForm[field.id]);
+  editedFields.add(mainForm[field.id]);
+  editOutput();
+}
+
+function validTextInput(field) {
+  completedFields.add(mainForm[field.id]);
+  editedFields.delete(mainForm[field.id]);
+  editOutput();
+}
+
+function editOutput() {
+  if (editedFields.size === 0 && completedFields.size < 4) {
+    mainForm['form-result'].value = '';
+  } else if (editedFields.size > 0 && completedFields.size < 4) {
+    let fieldString = editedFields.values().next().value.id;
+    if (fieldString === 'street-name') {
+      fieldString = 'street name';
+    }
+    mainForm['form-result'].value = `Please input a valid ${fieldString}`;
+  }
+}
