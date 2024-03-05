@@ -97,12 +97,17 @@ function fieldHandler(field) {
   }
   editedFields.add(mainForm[field.id]);
 
-  // fix this!!! just use the if statements on the page
   if (((field.id === 'street-name' || field.id === 'suburb') && isValidStreetnameSuburb(field))
     || (field.id === 'postcode' && isValidPostcode(field))
     || (field.id === 'dob' && isValidDob(field))) {
     validTextInput(field);
-  } else if (!mainForm['street-name'].value || !isValidStreetnameSuburb(mainForm['street-name'])) {
+  } else {
+    inputRendering();
+  }
+}
+
+function inputRendering() {
+  if (!mainForm['street-name'].value || !isValidStreetnameSuburb(mainForm['street-name'])) {
     mainForm['form-result'].value = `Please input a valid street name`;
     completedFields.delete(mainForm['street-name']);
   } else if (isValidStreetnameSuburb(mainForm['street-name'])
@@ -123,14 +128,38 @@ function fieldHandler(field) {
   }
 }
 
-// function invalidTextInput(field) {
-//   completedFields.delete(mainForm[field.id]);
-// }
-
 function validTextInput(field) {
+  console.log('invalidtextinput')
+  console.log('before add')
+  console.log(completedFields)
+
+  console.log(completedFields.size)
+
   completedFields.add(mainForm[field.id]);
+  console.log('after add')
+  console.log(completedFields)
+
+  console.log(completedFields.size)
   editedFields.delete(mainForm[field.id]);
   if (editedFields.size === 0 && completedFields.size < 4) {
     mainForm['form-result'].value = '';
+  } else {
+    inputRendering();
   }
 }
+
+mainForm['street-name'].addEventListener('blur', function () {
+  fieldHandler(mainForm['street-name']);
+});
+
+mainForm['suburb'].addEventListener('blur', function () {
+  fieldHandler(mainForm['suburb']);
+});
+
+mainForm['postcode'].addEventListener('blur', function () {
+  fieldHandler(mainForm['postcode']);
+});
+
+mainForm['dob'].addEventListener('blur', function () {
+  fieldHandler(mainForm['dob']);
+});
