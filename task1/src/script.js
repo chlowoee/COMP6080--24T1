@@ -163,3 +163,46 @@ mainForm['postcode'].addEventListener('blur', function () {
 mainForm['dob'].addEventListener('blur', function () {
   fieldHandler(mainForm['dob']);
 });
+
+// main check
+mainForm.addEventListener('change', () => {
+  console.log('in main')
+  console.log(completedFields)
+
+  console.log(completedFields.size)
+  writeToOutput();
+});
+
+function writeToOutput() {
+  console.log('in write2output')
+  console.log(completedFields)
+
+  console.log(completedFields.size)
+  if (completedFields.size > 3) {
+    let finalOutput = '';
+    let checkboxesArray = Array.from(checkboxes);
+    let result = checkboxesArray.filter((cb) => cb.checked === true);
+    let age = getAge(mainForm['dob'].value);
+    finalOutput = `You are ${age} years old, and your address is ${mainForm['street-name'].value} St, ${mainForm['suburb'].value}, ${mainForm['postcode'].value}, Australia. Your building is `;
+    if (mainForm['building-type'].value == 'apartment') {
+      finalOutput += 'an Apartment, and it has ';
+    } else {
+      finalOutput += 'a House, and it has ';
+    }
+    if (result.length === 0) {
+      finalOutput += 'no features.';
+    } else if (result.length === 1) {
+      finalOutput += `${result[0].value}.`;
+
+    } else {
+      let i = 0;
+      for (i; i < result.length - 1; i++) {
+        finalOutput += `${result[i].value}, `;
+      }
+      finalOutput += `and ${result[i].value}.`
+    }
+    mainForm['form-result'].value = finalOutput;
+  }
+}
+
+
