@@ -1,22 +1,19 @@
 const mainForm = document.forms[0];
 
 //checkboxes
-var checkedCheckboxes = new Set();
-function checkboxHandler(event) {
+const checkedCheckboxes = new Set();
+
+/**
+ * Handles checkboxes and updates value of select-all-btn
+ * @param {*} event 
+ */
+const checkboxHandler = (event) => {
   let checkbox = event.target;
-  if (checkbox.checked) {
-    checkedCheckboxes.add(checkbox);
-  } else {
-    checkedCheckboxes.delete(checkbox);
-  }
-  if (checkedCheckboxes.size != 4) {
-    mainForm['select-all-btn'].value = 'Select All';
-  } else {
-    mainForm['select-all-btn'].value = 'Deselect All';
-  }
+  checkbox.checked ? checkedCheckboxes.add(checkbox) : checkedCheckboxes.delete(checkbox);
+  mainForm['select-all-btn'].value = checkedCheckboxes.size !== 4 ? 'Select All' : 'Deselect All';
 }
 
-var checkboxes = document.querySelectorAll('input[type = "checkbox"]');
+const checkboxes = document.querySelectorAll('input[type = "checkbox"]');
 checkboxes.forEach(function (checkbox) {
   checkbox.addEventListener('change', checkboxHandler);
 });
@@ -24,41 +21,30 @@ checkboxes.forEach(function (checkbox) {
 // select all
 mainForm['select-all-btn'].addEventListener('click', () => {
   if (mainForm['select-all-btn'].value === 'Select All') {
-    for (let i = 0; i < checkboxes.length; i++) {
-      checkboxes[i].checked = true;
-      checkedCheckboxes.add(checkboxes[i]);
-    }
+    checkboxes.forEach(cb => {
+      cb.checked = true;
+      checkedCheckboxes.add(cb);
+    })
     mainForm['select-all-btn'].value = 'Deselect All';
   } else {
-    for (let i = 0; i < checkboxes.length; i++) {
-      checkboxes[i].checked = false;
-      checkedCheckboxes.delete(checkboxes[i]);
-    }
+    checkboxes.forEach(cb => {
+      cb.checked = false;
+      checkedCheckboxes.add(cb);
+    })
     mainForm['select-all-btn'].value = 'Select All';
   }
   writeToOutput();
 });
 
-var completedFields = new Set();
+const completedFields = new Set();
 
-function getAge(dob) {
-  let today = new Date();
-  let dobString = dob.split('/');
-  let dobReverse = dobString.reverse().join('/');
-  let dobFinal = new Date(dobReverse);
-  let year = today.getFullYear() - dobFinal.getFullYear();
-  let months = today.getMonth() - dobFinal.getMonth();
-  let days = today.getDate() - dobFinal.getDate();
-  if (months < 0 || (months === 0 && days < 0)) {
-    year--;
-  }
-  return year;
-}
-
-//check if dis
-function isValidDate(dob) {
-  let dateRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
-  if (!dateRegex.test(dob)) {
+/**
+ * If a date is valid, returns age. Else returns false.
+ * @param {String} dob 
+ * @returns {Number}
+ */
+const isValidDate = (dob) => {
+  if (!isValidDateFormat(dob)) {
     return false;
   }
   let parts = dob.split('/');
@@ -66,143 +52,139 @@ function isValidDate(dob) {
   let month = parseInt(parts[1], 10) - 1;
   let year = parseInt(parts[2], 10);
   let date = new Date(year, month, day);
-  if (date.getDate() !== day || date.getMonth() !== month
-    || date.getFullYear() !== year) {
+  if (!isValidParsedDate(date, day, month, year)) {
     return false;
   }
-  let today = new Date();
-
-  let newYear = today.getFullYear() - date.getFullYear();
-  let newMonth = today.getMonth() - date.getMonth();
-  let newDay = today.getDate() - date.getDate();
-
-  if (newMonth < 0 || (newMonth === 0 && newDay < 0)) {
-    newYear--;
-  }
-  if (newYear < 0) {
-    return false;
-  }
-
-  return newYear;
+  return calculateAge(date);
 }
+
+/**
+ * Validates the dob format
+ * @param {Number} dob 
+ * @returns 
+ */
+const isValidDateFormat = (dob) => {
+  let dateRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
+  return dateRegex.test(dob);
+}
+
+/**
+ * Validates parsed date
+ * @param {Number} date 
+ * @param {Number} day 
+ * @param {Number} month 
+ * @param {Number} year 
+ * @returns 
+ */
+const isValidParsedDate = (date, day, month, year) => date.getDate() === day
+  && date.getMonth() === month && date.getFullYear() === year;
+
+/**
+ * Calculates age based on date
+ * @param {Number} date 
+ * @returns age if valid, false if invalid
+ */
+const calculateAge = (date) => {
+  let today = new Date();
+  let age = today.getFullYear() - date.getFullYear();
+  let months = today.getMonth() - date.getMonth();
+  let days = today.getDate() - date.getDate();
+  if (months < 0 || (months === 0 && days < 0)) {
+    age--;
+  }
+  if (age < 0) {
+    return false;
+  }
+  return age;
+}
+
 const isValidStreetnameSuburb = (field) => (field.value !== '' && field.value.length >= 3 && field.value.length <= 50);
 const isValidPostcode = (field) => (/^\d{4}$/.test(field.value));
-const isValidDob = (field) => isValidDate(field.value);
 
-var editedFields = new Set();
-function fieldHandler(field) {
-  let fieldString = field.id;
-  if (fieldString === 'street-name') {
-    fieldString = 'street name';
-  }
+const editedFields = new Set();
+
+/**
+ * Handler for text inputs
+ * @param {} field 
+ */
+const fieldHandler = (field) => {
   editedFields.add(mainForm[field.id]);
-
   if (((field.id === 'street-name' || field.id === 'suburb') && isValidStreetnameSuburb(field))
     || (field.id === 'postcode' && isValidPostcode(field))
-    || (field.id === 'dob' && isValidDob(field))) {
+    || (field.id === 'dob' && isValidDate(field.value))) {
     validTextInput(field);
   } else {
     inputRendering();
   }
 }
 
-function inputRendering() {
+const inputRendering = () => {
   if (!mainForm['street-name'].value || !isValidStreetnameSuburb(mainForm['street-name'])) {
     mainForm['form-result'].value = `Please input a valid street name`;
     completedFields.delete(mainForm['street-name']);
-  } else if (isValidStreetnameSuburb(mainForm['street-name'])
-    && (!mainForm['suburb'].value || !isValidStreetnameSuburb(mainForm['suburb']))) {
+  } else if (!mainForm['suburb'].value || !isValidStreetnameSuburb(mainForm['suburb'])) {
     mainForm['form-result'].value = `Please input a valid suburb`;
     completedFields.delete(mainForm['suburb']);
-  } else if (isValidStreetnameSuburb(mainForm['street-name'])
-    && isValidStreetnameSuburb(mainForm['suburb'])
-    && (!mainForm['postcode'].value || !isValidPostcode(mainForm['postcode']))) {
+  } else if (!mainForm['postcode'].value || !isValidPostcode(mainForm['postcode'])) {
     mainForm['form-result'].value = 'Please input a valid postcode';
     completedFields.delete(mainForm['postcode']);
-  } else if (isValidStreetnameSuburb(mainForm['street-name'])
-    && isValidStreetnameSuburb(mainForm['suburb'])
-    && isValidPostcode(mainForm['postcode'])
-    && (!mainForm['dob'].value || !isValidDob(mainForm['dob']))) {
+  } else if (!mainForm['dob'].value || !isValidDate(mainForm['dob'].value)) {
     mainForm['form-result'].value = 'Please input a valid dob';
     completedFields.delete(mainForm['dob']);
   }
 }
 
-function validTextInput(field) {
-  console.log('invalidtextinput')
-  console.log('before add')
-  console.log(completedFields)
-
-  console.log(completedFields.size)
-
+/**
+ * Carries out checks when valid text is inputted
+ * @param {*} field 
+ */
+const validTextInput = (field) => {
   completedFields.add(mainForm[field.id]);
-  console.log('after add')
-  console.log(completedFields)
-
-  console.log(completedFields.size)
   editedFields.delete(mainForm[field.id]);
-  if (editedFields.size === 0 && completedFields.size < 4) {
-    mainForm['form-result'].value = '';
-  } else {
-    inputRendering();
-  }
+  (editedFields.size === 0 && completedFields.size < 4)
+    ? mainForm['form-result'].value = '' : inputRendering();
 }
 
 mainForm['street-name'].addEventListener('blur', function () {
   fieldHandler(mainForm['street-name']);
+  writeToOutput();
 });
 
 mainForm['suburb'].addEventListener('blur', function () {
   fieldHandler(mainForm['suburb']);
+  writeToOutput();
 });
 
 mainForm['postcode'].addEventListener('blur', function () {
   fieldHandler(mainForm['postcode']);
+  writeToOutput();
 });
 
 mainForm['dob'].addEventListener('blur', function () {
   fieldHandler(mainForm['dob']);
-});
-
-// main check
-mainForm.addEventListener('change', () => {
-  console.log('in main')
-  console.log(completedFields)
-
-  console.log(completedFields.size)
   writeToOutput();
 });
 
-function writeToOutput() {
-  console.log('in write2output')
-  console.log(completedFields)
+mainForm.addEventListener('change', () => {
+  writeToOutput();
+});
 
-  console.log(completedFields.size)
-  if (completedFields.size > 3) {
-    let finalOutput = '';
-    let checkboxesArray = Array.from(checkboxes);
-    let result = checkboxesArray.filter((cb) => cb.checked === true);
-    let age = getAge(mainForm['dob'].value);
-    finalOutput = `You are ${age} years old, and your address is ${mainForm['street-name'].value} St, ${mainForm['suburb'].value}, ${mainForm['postcode'].value}, Australia. Your building is `;
-    if (mainForm['building-type'].value == 'apartment') {
-      finalOutput += 'an Apartment, and it has ';
-    } else {
-      finalOutput += 'a House, and it has ';
-    }
-    if (result.length === 0) {
-      finalOutput += 'no features.';
-    } else if (result.length === 1) {
-      finalOutput += `${result[0].value}.`;
+/**
+ * Creates the form result string from all form info
+ * @returns 
+ */
+const writeToOutput = () => {
+  if (completedFields.size <= 3) return;
 
-    } else {
-      let i = 0;
-      for (i; i < result.length - 1; i++) {
-        finalOutput += `${result[i].value}, `;
-      }
-      finalOutput += `and ${result[i].value}.`
-    }
-    mainForm['form-result'].value = finalOutput;
-  }
+  let checkedFeatures = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+  let buildingType = mainForm['building-type'].value === 'apartment' ? 'an Apartment' : 'a House';
+  let age = isValidDate(mainForm['dob'].value);
+  let address = `${mainForm['street-name'].value} St, ${mainForm['suburb'].value}, ${mainForm['postcode'].value}, Australia`;
+  let featuresString = checkedFeatures.length === 0 ? 'no features.' :
+    checkedFeatures.length === 1 ? `${checkedFeatures[0]}.` :
+      `${checkedFeatures.slice(0, -1).join(', ')} and ${checkedFeatures.slice(-1)[0]}.`;
+
+  let finalOutput = `You are ${age} years old, and your address is ${address}. Your building is ${buildingType}, and it has ${featuresString}`;
+  mainForm['form-result'].value = finalOutput;
 }
-
 
