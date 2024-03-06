@@ -1,7 +1,11 @@
 const mainForm = document.forms[0];
 
-//checkboxes
 const checkedCheckboxes = new Set();
+const completedFields = new Set();
+const editedFields = new Set();
+
+const isValidStreetnameSuburb = (field) => (field.value !== '' && field.value.length >= 3 && field.value.length <= 50);
+const isValidPostcode = (field) => (/^\d{4}$/.test(field.value));
 
 /**
  * Handles checkboxes and updates value of select-all-btn
@@ -12,8 +16,6 @@ const checkboxHandler = (event) => {
   checkbox.checked ? checkedCheckboxes.add(checkbox) : checkedCheckboxes.delete(checkbox);
   mainForm['select-all-btn'].value = checkedCheckboxes.size !== 4 ? 'Select All' : 'Deselect All';
 }
-
-const completedFields = new Set();
 
 /**
  * If a date is valid, returns age. Else returns false.
@@ -74,11 +76,6 @@ const calculateAge = (date) => {
   }
   return age;
 }
-
-const isValidStreetnameSuburb = (field) => (field.value !== '' && field.value.length >= 3 && field.value.length <= 50);
-const isValidPostcode = (field) => (/^\d{4}$/.test(field.value));
-
-const editedFields = new Set();
 
 /**
  * Handler for text inputs
@@ -145,11 +142,13 @@ const writeToOutput = () => {
   mainForm['form-result'].value = finalOutput;
 }
 
+// EVENT LISTENERS: 
+
 const checkboxes = document.querySelectorAll('input[type = "checkbox"]');
 checkboxes.forEach(function (checkbox) {
   checkbox.addEventListener('change', checkboxHandler);
 });
-// select all
+
 mainForm['select-all-btn'].addEventListener('click', () => {
   if (mainForm['select-all-btn'].value === 'Select All') {
     checkboxes.forEach(cb => {
@@ -166,6 +165,7 @@ mainForm['select-all-btn'].addEventListener('click', () => {
   }
   writeToOutput();
 });
+
 mainForm['street-name'].addEventListener('blur', function () {
   fieldHandler(mainForm['street-name']);
   writeToOutput();
