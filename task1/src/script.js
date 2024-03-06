@@ -13,29 +13,6 @@ const checkboxHandler = (event) => {
   mainForm['select-all-btn'].value = checkedCheckboxes.size !== 4 ? 'Select All' : 'Deselect All';
 }
 
-const checkboxes = document.querySelectorAll('input[type = "checkbox"]');
-checkboxes.forEach(function (checkbox) {
-  checkbox.addEventListener('change', checkboxHandler);
-});
-
-// select all
-mainForm['select-all-btn'].addEventListener('click', () => {
-  if (mainForm['select-all-btn'].value === 'Select All') {
-    checkboxes.forEach(cb => {
-      cb.checked = true;
-      checkedCheckboxes.add(cb);
-    })
-    mainForm['select-all-btn'].value = 'Deselect All';
-  } else {
-    checkboxes.forEach(cb => {
-      cb.checked = false;
-      checkedCheckboxes.add(cb);
-    })
-    mainForm['select-all-btn'].value = 'Select All';
-  }
-  writeToOutput();
-});
-
 const completedFields = new Set();
 
 /**
@@ -118,6 +95,10 @@ const fieldHandler = (field) => {
   }
 }
 
+/**
+ * Checks if any text inputs are invalid and updates the form-result with
+ * appropriate error message
+ */
 const inputRendering = () => {
   if (!mainForm['street-name'].value || !isValidStreetnameSuburb(mainForm['street-name'])) {
     mainForm['form-result'].value = `Please input a valid street name`;
@@ -145,6 +126,46 @@ const validTextInput = (field) => {
     ? mainForm['form-result'].value = '' : inputRendering();
 }
 
+/**
+ * Creates the form result string from all form info
+ * @returns 
+ */
+const writeToOutput = () => {
+  if (completedFields.size <= 3) return;
+
+  let checkedFeatures = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+  let buildingType = mainForm['building-type'].value === 'apartment' ? 'an Apartment' : 'a House';
+  let age = isValidDate(mainForm['dob'].value);
+  let address = `${mainForm['street-name'].value} St, ${mainForm['suburb'].value}, ${mainForm['postcode'].value}, Australia`;
+  let featuresString = checkedFeatures.length === 0 ? 'no features.' :
+    checkedFeatures.length === 1 ? `${checkedFeatures[0]}.` :
+      `${checkedFeatures.slice(0, -1).join(', ')} and ${checkedFeatures.slice(-1)[0]}.`;
+
+  let finalOutput = `You are ${age} years old, and your address is ${address}. Your building is ${buildingType}, and it has ${featuresString}`;
+  mainForm['form-result'].value = finalOutput;
+}
+
+const checkboxes = document.querySelectorAll('input[type = "checkbox"]');
+checkboxes.forEach(function (checkbox) {
+  checkbox.addEventListener('change', checkboxHandler);
+});
+// select all
+mainForm['select-all-btn'].addEventListener('click', () => {
+  if (mainForm['select-all-btn'].value === 'Select All') {
+    checkboxes.forEach(cb => {
+      cb.checked = true;
+      checkedCheckboxes.add(cb);
+    })
+    mainForm['select-all-btn'].value = 'Deselect All';
+  } else {
+    checkboxes.forEach(cb => {
+      cb.checked = false;
+      checkedCheckboxes.add(cb);
+    })
+    mainForm['select-all-btn'].value = 'Select All';
+  }
+  writeToOutput();
+});
 mainForm['street-name'].addEventListener('blur', function () {
   fieldHandler(mainForm['street-name']);
   writeToOutput();
@@ -169,22 +190,16 @@ mainForm.addEventListener('change', () => {
   writeToOutput();
 });
 
-/**
- * Creates the form result string from all form info
- * @returns 
- */
-const writeToOutput = () => {
-  if (completedFields.size <= 3) return;
-
-  let checkedFeatures = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
-  let buildingType = mainForm['building-type'].value === 'apartment' ? 'an Apartment' : 'a House';
-  let age = isValidDate(mainForm['dob'].value);
-  let address = `${mainForm['street-name'].value} St, ${mainForm['suburb'].value}, ${mainForm['postcode'].value}, Australia`;
-  let featuresString = checkedFeatures.length === 0 ? 'no features.' :
-    checkedFeatures.length === 1 ? `${checkedFeatures[0]}.` :
-      `${checkedFeatures.slice(0, -1).join(', ')} and ${checkedFeatures.slice(-1)[0]}.`;
-
-  let finalOutput = `You are ${age} years old, and your address is ${address}. Your building is ${buildingType}, and it has ${featuresString}`;
-  mainForm['form-result'].value = finalOutput;
-}
-
+mainForm['reset-form'].addEventListener('click', () => {
+  mainForm['street-name'].value = '';
+  mainForm['suburb'].value = '';
+  mainForm['postcode'].value = '';
+  mainForm['dob'].value = '';
+  mainForm['building-type'].value = 'apartment';
+  checkboxes.forEach(cb => cb.checked = false)
+  checkedCheckboxes.clear();
+  completedFields.clear();
+  editedFields.clear();
+  mainForm['select-all-btn'].value = 'Select All';
+  mainForm['form-result'].value = '';
+});
