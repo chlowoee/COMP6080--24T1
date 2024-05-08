@@ -1,0 +1,52 @@
+/* base styles, feel free to edit */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial;
+}
+
+.primary-colour {
+    background-color: #3e3e3e;
+    color: #f9f9f9;
+    border-color: #3e3e3e;
+}
+
+.navbar {
+    margin-bottom: 1rem;
+}
+
+form button {
+    margin-bottom: 10px;
+}
+
+#thread-sidebar {
+    max-width: 400px;
+}
+
+.reply-button {
+    width: 100px;
+}
+
+.margin-2 {
+    margin: 10px;
+}
+
+.name {
+    display: block;
+    font-size: 1.17em;
+    margin: 0.83em 0;
+    font-weight: bold;
+    color: inherit;
+    text-decoration: none;
+}
+
+.profile-picture {
+    height: 50px;
+    width: 50px;
+}
+
+.comment-indentation {
+    margin-left: 0px;
+}
