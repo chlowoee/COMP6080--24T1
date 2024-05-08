@@ -1,0 +1,63 @@
+{
+  "admins": {
+    "a": {
+      "name": "a",
+      "password": "a",
+      "store": {
+        "1": {
+          "name": "a",
+          "description": "a",
+          "defaultColor": "",
+          "thumbnail": "default",
+          "slides": [
+            {
+              "slideContent": [
+                {
+                  "id": "9b419e70-c765-418e-8055-430ea8094260",
+                  "type": "code",
+                  "size": "60",
+                  "text": "  const [open, setOpen] = React.useState(false);\n",
+                  "fontSize": "2",
+                  "x": 0,
+                  "y": 0
+                }
+              ]
+            },
+            {
+              "slideContent": [
+                {
+                  "id": "b8de8548-a8a6-4ef2-989d-d214558331e6",
+                  "type": "code",
+                  "size": "100",
+                  "text": "  const [open, setOpen] = React.useState(false);\n",
+                  "fontSize": "1",
+                  "x": 0,
+                  "y": 0
+                }
+              ]
+            },
+            {
+              "slideContent": [
+                {
+                  "id": "1f1b0232-fc57-4dac-9f78-7b11d8fa9d44",
+                  "type": "code",
+                  "size": "10",
+                  "text": "  const [open, setOpen] = React.useState(false);\n",
+                  "fontSize": "0.5",
+                  "x": 0,
+                  "y": 0
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "lebron@gmail.com": {
+      "name": "Lebron James",
+      "password": "AAAAHHHHHHH",
+      "store": {},
+      "sessionActive": false
+    }
+  }
+}
